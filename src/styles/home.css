@@ -1,0 +1,14 @@
+/**{
+    border: solid red 1px;
+}*/
+
+.scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+  }
+  
+  .scroll-container .row {
+    display: flex;
+    flex-wrap: nowrap;
+  }

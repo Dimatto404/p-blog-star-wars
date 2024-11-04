@@ -1,26 +1,50 @@
-import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 
-export const Single = props => {
+const Single = () => {
+	const { title, uid } = useParams();
 	const { store, actions } = useContext(Context);
-	const params = useParams();
+
+	useEffect(() => {
+		actions.fetchCardData(title, uid);
+	}, [title, uid]);
+
+	const data = store.cardData;
+
 	return (
-		<div className="jumbotron">
-			<h1 className="display-4">This will show the demo element: {store.demo[params.theid].title}</h1>
+		<div>
+			<div className="container m-5 row d-flex, align-items-center justify-content-between">
+				<div className="col-md-5">
+					<img
+						src={`https://starwars-visualguide.com/assets/img/${title === "people" ? "characters" : title}/${uid}.jpg`}
+						className="card-img-top"
+						style={{ width: "100%", height: "320px" }}
+						onError={(e) => {
+							e.target.src = "https://starwars-visualguide.com/assets/img/placeholder.jpg";
+						}}
+					/>
+				</div>
+				<div className="col-md-5">
+					<h1 className="text-center text-danger">{data.name}</h1>
+					<p className="text-center">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi.</p>
+				</div>
 
-			<hr className="my-4" />
-
-			<Link to="/">
-				<span className="btn btn-primary btn-lg" href="#" role="button">
-					Back home
-				</span>
-			</Link>
+			</div>
+			<div className="table-responsive">
+				<table className="table table-bordered mt-3">
+					<tbody>
+						{Object.entries(data).map(([key, value]) => (
+							<tr key={key}>
+								<th className="text-danger">{key.replace('_', ' ')}</th>
+								<td>{value}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	);
 };
 
-Single.propTypes = {
-	match: PropTypes.object
-};
+export default Single;

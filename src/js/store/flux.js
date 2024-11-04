@@ -1,42 +1,68 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			people: [],
+			vehicles: [],
+			planets: [],
+			favorites: [],
+			cardData: []
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			fetchPeople: async () => {
+				const response = await fetch("https://www.swapi.tech/api/people?page=1&limit=10");
+				try {
+					const data = await response.json();
+					setStore({ people: data.results });
+					console.log(data.results)
+				} catch (error) {
+					console.error(console.log(error));
+				}
 			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
+			fetchVehicles: async () => {
+				try {
+					const response = await fetch("https://www.swapi.tech/api/vehicles?page=2&limit=10");
+					const data = await response.json();
+					setStore({ vehicles: data.results });
+					console.log(data.results)
+				} catch (error) {
+					console.error(console.log(error));
+				}
 			},
-			changeColor: (index, color) => {
-				//get the store
+			fetchPlanets: async () => {
+				try {
+					const response = await fetch("https://www.swapi.tech/api/planets?page=3&limit=10");
+					const data = await response.json();
+					setStore({ planets: data.results });
+					console.log(data.results)
+				} catch (error) {
+					console.error(console.log(error));
+				}
+			},
+			toggleFavorite: (item) => {
 				const store = getStore();
+				const isFavorite = store.favorites.some((fav) => fav.uid === item.uid);
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+				if (isFavorite) {
+					setStore({
+						favorites: store.favorites.filter((fav) => fav.uid !== item.uid)
+					});
+				} else {
+					setStore({
+						favorites: [...store.favorites, item]
+					});
+				}
+			},
+			fetchCardData: async (title, uid) => {
+				try {
+					const response = await fetch(`https://www.swapi.tech/api/${title}/${uid}`);
+					const data = await response.json();
 
-				//reset the global store
-				setStore({ demo: demo });
+					if (data.result && data.result.properties) {
+						setStore({ cardData: data.result.properties });
+					}
+				} catch (error) {
+					console.error(console.log(error));
+				}
 			}
 		}
 	};
