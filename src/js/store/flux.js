@@ -1,3 +1,4 @@
+let idCounter = 1;
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -9,42 +10,54 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 			fetchPeople: async () => {
-				const response = await fetch("https://www.swapi.tech/api/people?page=1&limit=10");
 				try {
+					const response = await fetch("https://www.swapi.tech/api/people?page=1&limit=10");
 					const data = await response.json();
-					setStore({ people: data.results });
-					console.log(data.results)
+					const peopleWithIds = data.results.map(person => ({
+						...person,
+						id: idCounter++
+					}));
+
+					setStore({ people: peopleWithIds });
 				} catch (error) {
-					console.error(console.log(error));
+					console.error(error);
 				}
 			},
 			fetchVehicles: async () => {
 				try {
-					const response = await fetch("https://www.swapi.tech/api/vehicles?page=2&limit=10");
+					const response = await fetch("https://www.swapi.tech/api/vehicles?page=1&limit=10");
 					const data = await response.json();
-					setStore({ vehicles: data.results });
-					console.log(data.results)
+					const vehiclesWithIds = data.results.map(vehicle => ({
+						...vehicle,
+						id: idCounter++
+					}));
+
+					setStore({ vehicles: vehiclesWithIds });
 				} catch (error) {
-					console.error(console.log(error));
+					console.error(error);
 				}
 			},
 			fetchPlanets: async () => {
 				try {
-					const response = await fetch("https://www.swapi.tech/api/planets?page=3&limit=10");
+					const response = await fetch("https://www.swapi.tech/api/planets?page=1&limit=10");
 					const data = await response.json();
-					setStore({ planets: data.results });
-					console.log(data.results)
+					const planetsWithIds = data.results.map(planet => ({
+						...planet,
+						id: idCounter++
+					}));
+
+					setStore({ planets: planetsWithIds });
 				} catch (error) {
-					console.error(console.log(error));
+					console.error(error);
 				}
 			},
 			toggleFavorite: (item) => {
 				const store = getStore();
-				const isFavorite = store.favorites.some((fav) => fav.uid === item.uid);
+				const isFavorite = store.favorites.some((fav) => fav.id === item.id);
 
 				if (isFavorite) {
 					setStore({
-						favorites: store.favorites.filter((fav) => fav.uid !== item.uid)
+						favorites: store.favorites.filter((fav) => fav.id !== item.id)
 					});
 				} else {
 					setStore({
@@ -61,7 +74,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						setStore({ cardData: data.result.properties });
 					}
 				} catch (error) {
-					console.error(console.log(error));
+					console.error(error);
 				}
 			}
 		}

@@ -34,7 +34,7 @@ export const Navbar = () => {
 				<div className={`dropdown-menu ${showFavorites ? "show" : ""}`} aria-labelledby="favoritesDropdown">
 					{store.favorites.length > 0 ? (
 						store.favorites.map((fav) => (
-							<div className="dropdown-item d-flex justify-content-between align-items-center" key={fav.uid}>
+							<div className="dropdown-item d-flex justify-content-between align-items-center" key={fav.id}>
 								{fav.name}
 								<span
 									className="btn btn-outline-danger btn-sm  mx-3"

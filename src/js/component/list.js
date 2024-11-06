@@ -30,7 +30,7 @@ const List = ({ title, items }) => {
                       Learn more!
                     </Link>
                     <button
-                      className={`btn ${store.favorites.some((fav) => fav.uid === item.uid)
+                      className={`btn ${store.favorites.some((fav) => fav.id === item.id)
                         ? "btn-warning"
                         : "btn-outline-warning"
                         }`}
